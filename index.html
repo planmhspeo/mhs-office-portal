@@ -19,14 +19,14 @@
         .fc .fc-button:hover { background-color: #0369a1; }
         .fc .fc-button-active { background-color: #0369a1 !important; }
         
-        /* Modal Animation */
-        .modal-backdrop { backdrop-filter: blur(4px); background-color: rgba(15, 23, 42, 0.6); transition: opacity 0.3s ease; }
-        .modal-content { transition: transform 0.3s ease, opacity 0.3s ease; }
+        /* Modal Backdrop & Animation */
+        .modal-backdrop { backdrop-filter: blur(6px); background-color: rgba(15, 23, 42, 0.65); transition: opacity 0.25s ease; }
+        .modal-content { transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease; }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Header สไตล์ Smart Office โมเดิร์น -->
+    <!-- Header สไตล์ Smart Office -->
     <header class="bg-slate-900 text-white shadow-xl border-b border-slate-800 sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -49,9 +49,8 @@
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-6 py-8 w-full flex-grow">
         
-        <!-- Action Cards (ปุ่มกดหลัก) -->
+        <!-- Action Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <!-- PR Card -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 flex justify-between items-center group">
                 <div class="space-y-1">
                     <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg mb-2 group-hover:scale-110 transition-transform">📢</div>
@@ -64,7 +63,6 @@
                 </button>
             </div>
 
-            <!-- Zoom Card -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 flex justify-between items-center group">
                 <div class="space-y-1">
                     <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-lg mb-2 group-hover:scale-110 transition-transform">💻</div>
@@ -145,7 +143,7 @@
         MHS Smart Office Portal &copy; 2026 - ระบบสารสนเทศสำนักงานอัจฉริยะ
     </footer>
 
-    <!-- Modal PR (Smart Popup) -->
+    <!-- Modal PR -->
     <div id="prModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.2s ease;">
         <div class="bg-white max-w-md w-full p-6 rounded-2xl shadow-2xl modal-content transform scale-95 transition-transform duration-200 border border-slate-100">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
@@ -172,7 +170,7 @@
         </div>
     </div>
 
-    <!-- Modal Zoom (Smart Popup) -->
+    <!-- Modal Zoom -->
     <div id="zoomModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.2s ease;">
         <div class="bg-white max-w-md w-full p-6 rounded-2xl shadow-2xl modal-content transform scale-95 transition-transform duration-200 border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
@@ -221,13 +219,68 @@
         </div>
     </div>
 
-    <!-- JavaScript ส่วนการทำงานและอนิเมชัน Popup -->
+    <!-- Smart Alert Modal -->
+    <div id="smartAlertModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.2s ease;">
+        <div class="bg-white max-w-sm w-full p-6 rounded-2xl shadow-2xl modal-content transform scale-95 transition-transform duration-200 border border-slate-100 text-center">
+            <div id="alertIcon" class="w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-md">🔔</div>
+            <h3 id="alertTitle" class="text-base font-bold text-slate-800 mb-2">แจ้งเตือนระบบ</h3>
+            <p id="alertMessage" class="text-xs text-slate-600 mb-6 leading-relaxed whitespace-pre-line"></p>
+            <div id="alertActions" class="flex justify-center space-x-2">
+                <button onclick="closeSmartAlert()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-medium transition shadow-md active:scale-95">รับทราบ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzzznun1yUaq1ppTTG4qY__MtH82M9TDfJG_7rXb10zScQCa2IZr-NxXOHyx3SdfS-Y/exec";
 
         let allPRLogs = [];
         let allZoomBookings = [];
         let calendar;
+
+        function showSmartAlert(title, message, type = 'success', extraButtons = null) {
+            const modal = document.getElementById("smartAlertModal");
+            const iconEl = document.getElementById("alertIcon");
+            const titleEl = document.getElementById("alertTitle");
+            const msgEl = document.getElementById("alertMessage");
+            const actionsEl = document.getElementById("alertActions");
+
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+
+            if (type === 'success') {
+                iconEl.className = "w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-md bg-emerald-50 text-emerald-600 shadow-emerald-600/10";
+                iconEl.innerText = "✅";
+            } else if (type === 'error' || type === 'conflict') {
+                iconEl.className = "w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-md bg-rose-50 text-rose-600 shadow-rose-600/10";
+                iconEl.innerText = "⚠️";
+            } else {
+                iconEl.className = "w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-md bg-blue-50 text-blue-600 shadow-blue-600/10";
+                iconEl.innerText = "ℹ️";
+            }
+
+            if (extraButtons) {
+                actionsEl.innerHTML = extraButtons;
+            } else {
+                actionsEl.innerHTML = `<button onclick="closeSmartAlert()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-medium transition shadow-md active:scale-95">รับทราบ</button>`;
+            }
+
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                modal.classList.remove("opacity-0");
+                modal.querySelector(".modal-content").classList.remove("scale-95");
+                modal.querySelector(".modal-content").classList.add("scale-100");
+            }, 10);
+        }
+
+        function closeSmartAlert() {
+            const modal = document.getElementById("smartAlertModal");
+            modal.classList.add("opacity-0");
+            modal.querySelector(".modal-content").classList.remove("scale-100");
+            modal.querySelector(".modal-content").classList.add("scale-95");
+            setTimeout(() => modal.classList.add("hidden"), 200);
+        }
 
         function openPRModal() {
             const modal = document.getElementById("prModal");
@@ -285,7 +338,14 @@
                 },
                 events: [],
                 eventClick: function(info) {
-                    alert(`📌 หัวข้อ: ${info.event.title}\n👤 ผู้จอง: ${info.event.extendedProps.requester}\n⏰ เวลา: ${info.event.extendedProps.timeStr}`);
+                    const props = info.event.extendedProps;
+                    const detailText = `หัวข้อ: ${info.event.title}\nผู้จอง: ${props.requester}\nเวลา: ${props.timeStr}\nรหัสผ่าน (Passcode): ${props.passcode || 'ใช้รหัสกลาง'}`;
+                    
+                    const buttons = `
+                        <button onclick="window.open('${props.zoomLink}', '_blank')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-medium transition shadow-md active:scale-95">🔗 เปิดลิงก์ Zoom</button>
+                        <button onclick="closeSmartAlert()" class="px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-medium transition">ปิด</button>
+                    `;
+                    showSmartAlert("รายละเอียดการจอง Zoom", detailText, "info", buttons);
                 }
             });
             calendar.render();
@@ -336,7 +396,9 @@
                     color: '#059669',
                     extendedProps: {
                         requester: r[5] || '',
-                        timeStr: `${startTime} - ${endTime} น.`
+                        timeStr: `${startTime} - ${endTime} น.`,
+                        zoomLink: r[8] || 'https://zoom.us',
+                        passcode: r[9] || ''
                     }
                 };
             });
@@ -414,26 +476,41 @@
             .then(res => res.json())
             .then(res => {
                 if (res.status === "success") {
-                    alert(`✅ ออกเลข PR สำเร็จ: ${res.prNumber}`);
                     closePRModal();
                     document.getElementById("prSubject").value = "";
                     document.getElementById("prRequester").value = "";
+                    showSmartAlert("สำเร็จ!", `ออกเลข PR เรียบร้อยแล้ว\nเลขที่: ${res.prNumber}`, "success");
                     fetchData();
-                } else { alert("❌ เกิดข้อผิดพลาด: " + res.message); }
+                } else { 
+                    showSmartAlert("เกิดข้อผิดพลาด", res.message, "error"); 
+                }
             })
-            .catch(() => alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์"))
+            .catch(() => showSmartAlert("เชื่อมต่อล้มเหลว", "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์", "error"))
             .finally(() => { btn.innerText = "ยืนยันออกเลข"; btn.disabled = false; });
         }
 
-       function submitZoom(e) {
+        function submitZoom(e) {
             e.preventDefault();
+
+            const dateVal = document.getElementById("zoomDate").value;
+            const startVal = document.getElementById("zoomStart").value;
+
+            // ตรวจสอบห้ามจองวันเวลาในอดีต
+            const now = new Date();
+            const selectedDateTime = new Date(`${dateVal}T${startVal}:00`);
+
+            if (selectedDateTime < now) {
+                showSmartAlert("ไม่สามารถจองได้", "ไม่สามารถจองห้องประชุมย้อนหลังในอดีตได้ กรุณาเลือกวันและเวลาในอนาคต", "error");
+                return;
+            }
+
             const btn = document.getElementById("zoomBtn"); btn.innerText = "กำลังตรวจสอบ..."; btn.disabled = true;
             
             const payload = {
                 action: "bookZoom",
                 topic: document.getElementById("zoomTopic").value,
-                date: document.getElementById("zoomDate").value, // แก้ไขตรงนี้ให้ถูกต้อง
-                startTime: document.getElementById("zoomStart").value,
+                date: dateVal,
+                startTime: startVal,
                 endTime: document.getElementById("zoomEnd").value,
                 requester: document.getElementById("zoomRequester").value,
                 zoomLink: document.getElementById("zoomLink").value,
@@ -444,7 +521,6 @@
             .then(res => res.json())
             .then(res => {
                 if (res.status === "success") {
-                    alert(`✅ จอง Zoom สำเร็จ\n🔗 ลิงก์: ${res.zoomLink}\n🔑 Passcode: ${res.zoomPasscode}`);
                     closeZoomModal();
                     document.getElementById("zoomTopic").value = "";
                     document.getElementById("zoomDate").value = "";
@@ -453,12 +529,15 @@
                     document.getElementById("zoomRequester").value = "";
                     document.getElementById("zoomLink").value = "";
                     document.getElementById("zoomPasscode").value = "";
+                    
+                    const successMsg = `จองห้อง Zoom สำเร็จ!\n🔗 ลิงก์: ${res.zoomLink}\n🔑 Passcode: ${res.zoomPasscode || 'ใช้รหัสกลาง'}`;
+                    showSmartAlert("จองสำเร็จ", successMsg, "success");
                     fetchData();
                 } else if (res.status === "conflict") {
-                    alert(`❌ ${res.message}`);
+                    showSmartAlert("ไม่สามารถจองได้", res.message, "conflict");
                 }
             })
-            .catch(() => alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์"))
+            .catch(() => showSmartAlert("เชื่อมต่อล้มเหลว", "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์", "error"))
             .finally(() => { btn.innerText = "ยืนยันการจอง"; btn.disabled = false; });
         }
     </script>
