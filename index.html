@@ -425,14 +425,14 @@
             .finally(() => { btn.innerText = "ยืนยันออกเลข"; btn.disabled = false; });
         }
 
-        function submitZoom(e) {
+       function submitZoom(e) {
             e.preventDefault();
             const btn = document.getElementById("zoomBtn"); btn.innerText = "กำลังตรวจสอบ..."; btn.disabled = true;
             
             const payload = {
                 action: "bookZoom",
                 topic: document.getElementById("zoomTopic").value,
-                date: document.getElementById("zoomDate5" || "zoomDate").value || document.getElementById("zoomDate").value,
+                date: document.getElementById("zoomDate").value, // แก้ไขตรงนี้ให้ถูกต้อง
                 startTime: document.getElementById("zoomStart").value,
                 endTime: document.getElementById("zoomEnd").value,
                 requester: document.getElementById("zoomRequester").value,
