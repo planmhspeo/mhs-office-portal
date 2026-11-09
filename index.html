@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบบริการงานสำนักงาน (MHS Office Portal)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Prompt', sans-serif; } </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">MHS Office Portal</h1>
+                <p class="text-xs text-blue-100">ระบบขอเลขประชาสัมพันธ์ และจอง Zoom Meeting สำนักงาน</p>
+            </div>
+            <span class="px-3 py-1 bg-blue-700 text-xs rounded-full font-medium">ออนไลน์ (Fast Mode)</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800">ขอเลขประชาสัมพันธ์ (PR)</h2>
+                    <p class="text-sm text-gray-500 mt-1">ออกเลขเอกสาร PR ประจำปีอัตโนมัติ</p>
+                </div>
+                <button onclick="openPRModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition shadow-sm">📢 ขอเลข PR</button>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800">จองห้อง Zoom Meeting</h2>
+                    <p class="text-sm text-gray-500 mt-1">จองเวลาประชุม ป้องกันเวลาซ้ำซ้อน</p>
+                </div>
+                <button onclick="openZoomModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition shadow-sm">💻 จอง Zoom</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-800">📋 ประวัติขอเลข PR</h3>
+                    <input type="text" id="searchPR" onkeyup="filterPRTable()" placeholder="🔍 ค้นหาเรื่อง, ผู้ขอ..." class="border rounded-lg px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-blue-500 w-40">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-gray-600 border-b">
+                            <tr><th class="p-3">เลขที่ PR</th><th class="p-3">เรื่อง</th><th class="p-3">ผู้ขอ</th></tr>
+                        </thead>
+                        <tbody id="prTableBody"><tr><td colspan="3" class="p-4 text-center text-gray-400">กำลังโหลด...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-800">📅 ตารางการจอง Zoom</h3>
+                    <input type="text" id="searchZoom" onkeyup="filterZoomTable()" placeholder="🔍 ค้นหาห้อง, หัวข้อ..." class="border rounded-lg px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-emerald-500 w-40">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-gray-600 border-b">
+                            <tr><th class="p-3">ห้อง</th><th class="p-3">วันที่ / เวลา</th><th class="p-3">ผู้จอง</th></tr>
+                        </thead>
+                        <tbody id="zoomTableBody"><tr><td colspan="3" class="p-4 text-center text-gray-400">กำลังโหลด...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal PR -->
+    <div id="prModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white max-w-md w-full p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-bold mb-4">ขอเลขประชาสัมพันธ์ (PR)</h3>
+            <form onsubmit="submitPR(event)">
+                <div class="mb-4"><label class="block text-sm font-medium mb-1">เรื่อง</label><input type="text" id="prSubject" required class="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"></div>
+                <div class="mb-4"><label class="block text-sm font-medium mb-1">ชื่อผู้ขอ (เจ้าของเรื่อง)</label><input type="text" id="prRequester" required class="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"></div>
+                <div class="flex justify-end space-x-2"><button type="button" onclick="closePRModal()" class="px-4 py-2 text-sm text-gray-600">ยกเลิก</button><button type="submit" id="prBtn" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg">ยืนยัน</button></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Zoom -->
+    <div id="zoomModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white max-w-md w-full p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-bold mb-4">จองห้อง Zoom Meeting</h3>
+            <form onsubmit="submitZoom(event)">
+                <div class="mb-3"><label class="block text-sm font-medium mb-1">ห้อง Zoom</label><select id="zoomRoom" class="w-full border rounded-lg px-3 py-2 text-sm"><option>Zoom Meeting 01</option><option>Zoom Meeting 02</option></select></div>
+                <div class="mb-3"><label class="block text-sm font-medium mb-1">หัวข้อประชุม</label><input type="text" id="zoomTopic" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                <div class="mb-3"><label class="block text-sm font-medium mb-1">วันที่</label><input type="date" id="zoomDate" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div><label class="block text-sm font-medium mb-1">เริ่ม</label><input type="time" id="zoomStart" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                    <div><label class="block text-sm font-medium mb-1">สิ้นสุด</label><input type="time" id="zoomEnd" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                </div>
+                <div class="mb-4"><label class="block text-sm font-medium mb-1">ชื่อผู้จอง (เจ้าของเรื่อง)</label><input type="text" id="zoomRequester" required class="w-full border rounded-lg px-3 py-2 text-sm"></div>
+                <div class="flex justify-end space-x-2"><button type="button" onclick="closeZoomModal()" class="px-4 py-2 text-sm text-gray-600">ยกเลิก</button><button type="submit" id="zoomBtn" class="px-4 py-2 text-sm bg-emerald-600 text-white rounded-lg">ยืนยัน</button></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 🔗 วาง Web App URL จาก Google Apps Script ตรงนี้
+        const API_URL = "https://script.google.com/macros/s/AKfycbzzznun1yUaq1ppTTG4qY__MtH82M9TDfJG_7rXb10zScQCa2IZr-NxXOHyx3SdfS-Y/exec";
+
+        let allPRLogs = [];
+        let allZoomBookings = [];
+
+        function openPRModal() { document.getElementById("prModal").classList.remove("hidden"); }
+        function closePRModal() { document.getElementById("prModal").classList.add("hidden"); }
+        function openZoomModal() { document.getElementById("zoomModal").classList.remove("hidden"); }
+        function closeZoomModal() { document.getElementById("zoomModal").classList.add("hidden"); }
+
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("zoomDate").setAttribute("min", today);
+            fetchData();
+        };
+
+        function fetchData() {
+            if (!API_URL || API_URL.includes("ใส่_WEB_APP_URL")) return;
+            fetch(API_URL)
+                .then(res => res.json())
+                .then(data => {
+                    allPRLogs = data.prLogs || [];
+                    allZoomBookings = data.zoomBookings || [];
+                    renderPRTable(allPRLogs);
+                    renderZoomTable(allZoomBookings);
+                })
+                .catch(err => console.error("Error loading data:", err));
+        }
+
+        function renderPRTable(logs) {
+            const tbody = document.getElementById("prTableBody");
+            if (!logs.length) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">ยังไม่มีข้อมูล</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = logs.slice().reverse().map(r => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-3 font-semibold text-blue-600">${r[1] || ''}</td>
+                    <td class="p-3">${r[2] || ''}</td>
+                    <td class="p-3 text-gray-500">${r[4] || ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderZoomTable(bookings) {
+            const tbody = document.getElementById("zoomTableBody");
+            if (!bookings.length) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">ยังไม่มีข้อมูล</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = bookings.slice().reverse().map(r => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-3 font-medium">${r[1] || ''}</td>
+                    <td class="p-3 text-xs">
+                        ${r[2] || ''} (${r[3] || ''}-${r[4] || ''})
+                        <br><span class="text-emerald-700 font-medium">${r[7] || ''}</span>
+                    </td>
+                    <td class="p-3 text-gray-500">${r[5] || ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        function filterPRTable() {
+            const keyword = document.getElementById("searchPR").value.toLowerCase();
+            const filtered = allPRLogs.filter(r => 
+                (r[1] && String(r[1]).toLowerCase().includes(keyword)) || 
+                (r[2] && String(r[2]).toLowerCase().includes(keyword)) || 
+                (r[4] && String(r[4]).toLowerCase().includes(keyword))
+            );
+            renderPRTable(filtered);
+        }
+
+        function filterZoomTable() {
+            const keyword = document.getElementById("searchZoom").value.toLowerCase();
+            const filtered = allZoomBookings.filter(r => 
+                (r[1] && String(r[1]).toLowerCase().includes(keyword)) || 
+                (r[2] && String(r[2]).toLowerCase().includes(keyword)) || 
+                (r[5] && String(r[5]).toLowerCase().includes(keyword)) ||
+                (r[7] && String(r[7]).toLowerCase().includes(keyword))
+            );
+            renderZoomTable(filtered);
+        }
+
+        function submitPR(e) {
+            e.preventDefault();
+            const btn = document.getElementById("prBtn"); btn.innerText = "กำลังบันทึก..."; btn.disabled = true;
+            
+            const payload = {
+                action: "requestPR",
+                subject: document.getElementById("prSubject").value,
+                requester: document.getElementById("prRequester").value
+            };
+
+            fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === "success") {
+                    alert(`✅ ออกเลข PR สำเร็จ: ${res.prNumber}`);
+                    closePRModal();
+                    document.getElementById("prSubject").value = "";
+                    document.getElementById("prRequester").value = "";
+                    fetchData();
+                } else {
+                    alert("❌ เกิดข้อผิดพลาด: " + res.message);
+                }
+            })
+            .catch(err => alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์"))
+            .finally(() => {
+                btn.innerText = "ยืนยัน";
+                btn.disabled = false;
+            });
+        }
+
+        function submitZoom(e) {
+            e.preventDefault();
+            const btn = document.getElementById("zoomBtn"); btn.innerText = "กำลังตรวจสอบ..."; btn.disabled = true;
+            
+            const payload = {
+                action: "bookZoom",
+                room: document.getElementById("zoomRoom").value,
+                topic: document.getElementById("zoomTopic").value,
+                date: document.getElementById("zoomDate").value,
+                startTime: document.getElementById("zoomStart").value,
+                endTime: document.getElementById("zoomEnd").value,
+                requester: document.getElementById("zoomRequester").value
+            };
+
+            fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === "success") {
+                    alert(`✅ จอง Zoom สำเร็จ\nลิงก์: ${res.zoomLink}`);
+                    closeZoomModal();
+                    document.getElementById("zoomTopic").value = "";
+                    document.getElementById("zoomDate").value = "";
+                    document.getElementById("zoomStart").value = "";
+                    document.getElementById("zoomEnd").value = "";
+                    document.getElementById("zoomRequester").value = "";
+                    fetchData();
+                } else if (res.status === "conflict") {
+                    alert(`❌ ${res.message}`);
+                }
+            })
+            .catch(err => alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์"))
+            .finally(() => {
+                btn.innerText = "ยืนยัน";
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
