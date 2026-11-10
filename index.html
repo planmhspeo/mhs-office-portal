@@ -325,12 +325,13 @@
             fetchData();
         };
 
-        function initCalendar() {
+function initCalendar() {
             const calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'th',
                 height: 'auto',
+                displayEventTime: false, // 👈 ปิดการแสดงเวลาซ้ำซ้อนด้านหน้า
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
