@@ -12,8 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <style> 
         body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; } 
-        
-        /* ปรับแต่งอีเวนต์ให้เว้นระยะห่างออกจากกันชัดเจน */
         .fc-event { 
             cursor: pointer; 
             font-size: 0.75rem; 
@@ -23,38 +21,29 @@
             border-left: 4px solid #047857 !important; 
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        
-        #calendar { 
-            height: 480px !important; 
-            max-height: 480px !important; 
-        }
-
+        #calendar { height: 520px !important; max-height: 520px !important; }
         .fc .fc-toolbar-title { font-size: 1.15rem; font-weight: 600; color: #1e293b; }
         .fc .fc-button { background-color: #0284c7; border: none; padding: 6px 12px; font-size: 0.85rem; border-radius: 8px; transition: all 0.2s; }
         .fc .fc-button:hover { background-color: #0369a1; }
         .fc .fc-button-active { background-color: #0369a1 !important; }
-        
-        /* ควบคุมช่องวันในปฏิทิน */
-        .fc-daygrid-day-frame { max-height: 85px; overflow: hidden; }
-        .fc-daygrid-day-events { max-height: 55px; overflow-y: auto; }
-        
-        /* Modal Backdrop & Animation */
+        .fc-daygrid-day-frame { max-height: 95px; overflow: hidden; }
+        .fc-daygrid-day-events { max-height: 65px; overflow-y: auto; }
         .modal-backdrop { backdrop-filter: blur(6px); background-color: rgba(15, 23, 42, 0.65); transition: opacity 0.25s ease; }
         .modal-content { transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease; }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Header สไตล์ Smart Office -->
+    <!-- Header -->
     <header class="bg-slate-900 text-white shadow-xl border-b border-slate-800 sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
             <div class="flex items-center space-x-3.5">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
                     <span class="text-2xl">🏢</span>
                 </div>
                 <div>
                     <h1 class="text-xl md:text-2xl font-bold tracking-tight">MHS Smart Office</h1>
-                    <p class="text-sm text-slate-300">ระบบขอเลขประชาสัมพันธ์และระบบการจองใช้งาน Zoom</p>
+                    <p class="text-sm text-slate-300">ระบบออกเลขประชาสัมพันธ์และระบบการจอง Zoom</p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -66,7 +55,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-6 py-8 w-full flex-grow">
+    <main class="max-w-7xl mx-auto px-6 py-8 w-full flex-grow">
         
         <!-- Action Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -98,107 +87,130 @@
         <!-- Calendar Section -->
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-8 overflow-hidden">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-slate-800 text-base md:text-lg flex items-center space-x-2">
+                <h3 class="text-lg md:text-xl font-bold text-slate-800 text-base md:text-lg flex items-center space-x-2">
                     <span>📅</span>
                     <span>ปฏิทินตารางการจอง Zoom สำนักงานศึกษาธิการจังหวัดแม่ฮ่องสอน</span>
                 </h3>
-                <span class="text-xs text-slate-400">คลิกที่รายการในปฏิทินเพื่อดูรายละเอียด</span>
+                <span class="text-sm text-slate-400">คลิกที่รายการในปฏิทินเพื่อดูรายละเอียด</span>
             </div>
             <div id="calendar"></div>
         </div>
 
         <!-- Tables Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
             <!-- PR Table -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
-                    <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
-                        <span>📋</span>
-                        <span>ประวัติการขอเลข PR</span>
-                    </h3>
-                    <div class="relative w-full sm:w-auto">
-                        <input type="text" id="searchPR" onkeyup="filterPRTable()" placeholder="🔍 ค้นหาเรื่อง, ผู้ขอ..." class="w-full sm:w-48 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+                        <h3 class="text-lg md:text-xl font-bold text-slate-800 text-base flex items-center space-x-2">
+                            <span>📋</span>
+                            <span>ประวัติการขอเลข PR</span>
+                        </h3>
+                        <div class="relative w-full sm:w-auto">
+                            <input type="text" id="searchPR" onkeyup="filterPRTable()" placeholder="🔍 ค้นหาเรื่อง, ผู้ขอ..." class="w-full sm:w-56 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100">
+                        <table class="w-full text-left text-sm table-fixed">
+                            <thead class="bg-slate-50/70 text-slate-600 text-sm border-b border-slate-100">
+                                <tr>
+                                    <th class="p-3 font-semibold w-28">เลขที่ PR</th>
+                                    <th class="p-3 font-semibold">เรื่อง</th>
+                                    <th class="p-3 font-semibold w-28">ผู้ขอ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prTableBody" class="divide-y divide-slate-100 text-sm">
+                                <tr><td colspan="3" class="p-6 text-center text-slate-400">กำลังโหลดข้อมูล...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="overflow-x-auto rounded-xl border border-slate-100">
-                    <table class="w-full text-left text-sm table-fixed">
-                        <thead class="bg-slate-50/70 text-slate-600 text-xs border-b border-slate-100">
-                            <tr>
-                                <th class="p-3 font-semibold w-28">เลขที่ PR</th>
-                                <th class="p-3 font-semibold">เรื่อง</th>
-                                <th class="p-3 font-semibold w-28">ผู้ขอ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="prTableBody" class="divide-y divide-slate-100 text-xs">
-                            <tr><td colspan="3" class="p-6 text-center text-slate-400">กำลังโหลดข้อมูล...</td></tr>
-                        </tbody>
-                    </table>
+                <!-- Pagination PR -->
+                <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-100 text-sm text-slate-500">
+                    <span id="prPageInfo">แสดงหน้า 1 จาก 1</span>
+                    <div class="space-x-1">
+                        <button onclick="changePRPage(-1)" id="prPrevBtn" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg transition disabled:opacity-40" disabled>ก่อนหน้า</button>
+                        <button onclick="changePRPage(1)" id="prNextBtn" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition disabled:opacity-40" disabled>ถัดไป</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Zoom Table -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
-                    <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
-                        <span>📜</span>
-                        <span>รายการจอง Zoom ล่าสุด</span>
-                    </h3>
-                    <div class="relative w-full sm:w-auto">
-                        <input type="text" id="searchZoom" onkeyup="filterZoomTable()" placeholder="🔍 ค้นหาหัวข้อ, ผู้จอง..." class="w-full sm:w-48 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5">
+                        <h3 class="text-lg md:text-xl font-bold text-slate-800 text-base flex items-center space-x-2">
+                            <span>📜</span>
+                            <span>รายการจอง Zoom ล่าสุด</span>
+                        </h3>
+                        <div class="relative w-full sm:w-auto">
+                            <input type="text" id="searchZoom" onkeyup="filterZoomTable()" placeholder="🔍 ค้นหาหัวข้อ, กลุ่ม, ผู้จอง..." class="w-full sm:w-56 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto rounded-xl border border-slate-100">
+                        <table class="w-full text-left text-sm table-fixed">
+                            <thead class="bg-slate-50/70 text-slate-600 text-sm border-b border-slate-100">
+                                <tr>
+                                    <th class="p-3 font-semibold w-40">วันที่ / เวลา</th>
+                                    <th class="p-3 font-semibold">หัวข้อประชุม</th>
+                                    <th class="p-3 font-semibold w-36">กลุ่มงาน</th>
+                                    <th class="p-3 font-semibold w-24">ผู้จอง</th>
+                                </tr>
+                            </thead>
+                            <tbody id="zoomTableBody" class="divide-y divide-slate-100 text-xs">
+                                <tr><td colspan="4" class="p-6 text-center text-slate-400">กำลังโหลดข้อมูล...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="overflow-x-auto rounded-xl border border-slate-100">
-                    <table class="w-full text-left text-sm table-fixed">
-                        <thead class="bg-slate-50/70 text-slate-600 text-xs border-b border-slate-100">
-                            <tr>
-                                <th class="p-3 font-semibold w-36">วันที่ / เวลา</th>
-                                <th class="p-3 font-semibold">หัวข้อประชุม</th>
-                                <th class="p-3 font-semibold w-28">ผู้จอง</th>
-                            </tr>
-                        </thead>
-                        <tbody id="zoomTableBody" class="divide-y divide-slate-100 text-xs">
-                            <tr><td colspan="3" class="p-6 text-center text-slate-400">กำลังโหลดข้อมูล...</td></tr>
-                        </tbody>
-                    </table>
+                <!-- Pagination Zoom -->
+                <div class="flex justify-between items-center mt-4 pt-3 border-t border-slate-100 text-sm text-slate-500">
+                    <span id="zoomPageInfo">แสดงหน้า 1 จาก 1</span>
+                    <div class="space-x-1">
+                        <button onclick="changeZoomPage(-1)" id="zoomPrevBtn" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg transition disabled:opacity-40" disabled>ก่อนหน้า</button>
+                        <button onclick="changeZoomPage(1)" id="zoomNextBtn" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition disabled:opacity-40" disabled>ถัดไป</button>
+                    </div>
                 </div>
             </div>
+
         </div>
     </main>
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-100 py-4 mt-12 text-center text-xs text-slate-400">
-        MHS Smart Office Portal &copy; 2026 - ระบบสารสนเทศสำนักงานอัจฉริยะ
+        MHS Smart Office Portal &copy; 2026 - ระบบออกเลขประชาสัมพันธ์และระบบการจอง Zoom
     </footer>
 
     <!-- Modal PR -->
-    <div id="prModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.2s ease;">
+    <div id="prModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.25s ease;">
         <div class="bg-white max-w-md w-full p-6 rounded-2xl shadow-2xl modal-content transform scale-95 transition-transform duration-200 border border-slate-100">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
                 <div class="flex items-center space-x-2">
                     <span class="text-xl">📢</span>
-                    <h3 class="text-base font-bold text-slate-800">ขอเลขประชาสัมพันธ์ (PR)</h3>
+                    <h3 class="text-lg md:text-xl font-bold text-slate-800">ขอเลขประชาสัมพันธ์ (PR)</h3>
                 </div>
                 <button onclick="closePRModal()" class="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center transition">✕</button>
             </div>
             <form onsubmit="submitPR(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1.5">เรื่อง / ชื่อโครงการ</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">เรื่อง / ชื่อโครงการ</label>
                     <input type="text" id="prSubject" required placeholder="ระบุเรื่องที่ต้องการออกเลข PR..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1.5">ชื่อผู้ขอ (เจ้าของเรื่อง)</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">ชื่อผู้ขอ (เจ้าของเรื่อง)</label>
                     <input type="text" id="prRequester" required placeholder="ระบุชื่อ-นามสกุล..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
                 </div>
                 <div class="flex justify-end space-x-2 pt-3">
-                    <button type="button" onclick="closePRModal()" class="px-4 py-2 text-xs font-medium text-slate-500 hover:bg-slate-50 rounded-xl transition">ยกเลิก</button>
-                    <button type="submit" id="prBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-xs font-medium transition shadow-md shadow-blue-600/20 active:scale-95">ยืนยันออกเลข</button>
+                    <button type="button" onclick="closePRModal()" class="px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50 rounded-xl transition">ยกเลิก</button>
+                    <button type="submit" id="prBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-medium transition shadow-md active:scale-95">ยืนยันออกเลข</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal Zoom -->
-    <div id="zoomModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.2s ease;">
+    <div id="zoomModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.25s ease;">
         <div class="bg-white max-w-md w-full p-6 rounded-2xl shadow-2xl modal-content transform scale-95 transition-transform duration-200 border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
                 <div class="flex items-center space-x-2">
@@ -209,73 +221,91 @@
             </div>
             <form onsubmit="submitZoom(event)" class="space-y-3.5">
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1.5">หัวข้อประชุม</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">หัวข้อประชุม</label>
                     <input type="text" id="zoomTopic" required placeholder="ระบุวาระหรือหัวข้อการประชุม..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1.5">วันที่ประชุม</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">สังกัดกลุ่มงาน</label>
+                    <select id="zoomDepartment" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                        <option value="">-- เลือกกลุ่มงานสังกัด --</option>
+                        <option value="กลุ่มอำนวยการ">กลุ่มอำนวยการ</option>
+                        <option value="กลุ่มบริหารงานบุคคล">กลุ่มบริหารงานบุคคล</option>
+                        <option value="กลุ่มพัฒนาการศึกษา">กลุ่มพัฒนาการศึกษา</option>
+                        <option value="กลุ่มนโยบายและแผน">กลุ่มนโยบายและแผน</option>
+                        <option value="กลุ่มส่งเสริมการศึกษาเอกชน">กลุ่มส่งเสริมการศึกษาเอกชน</option>
+                        <option value="กลุ่มลูกเสือ ยุวกาชาดฯ">กลุ่มลูกเสือ ยุวกาชาดและกิจการนักเรียน</option>
+                        <option value="กลุ่มนิเทศติดตามฯ">กลุ่มนิเทศติดตามและประเมินผล</option>
+                        <option value="หน่วยตรวจสอบภายใน">หน่วยตรวจสอบภายใน</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">วันที่ประชุม</label>
                     <input type="date" id="zoomDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1.5">เวลาเริ่มต้น (24 ชม.)</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">เวลาเริ่มต้น (24 ชม.)</label>
                         <select id="zoomStart" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                             <option value="">-- เลือกเวลา --</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1.5">เวลาสิ้นสุด (24 ชม.)</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">เวลาสิ้นสุด (24 ชม.)</label>
                         <select id="zoomEnd" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                             <option value="">-- เลือกเวลา --</option>
                         </select>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1.5">ชื่อผู้จอง (เจ้าของเรื่อง)</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">ชื่อผู้จอง (เจ้าของเรื่อง)</label>
                     <input type="text" id="zoomRequester" required placeholder="ระบุชื่อ-นามสกุล..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1.5">ลิงก์ Zoom (ถ้ามี)</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">ลิงก์ Zoom (ถ้ามี)</label>
                     <input type="url" id="zoomLink" placeholder="https://zoom.us/j/... (เว้นว่างเพื่อใช้ลิงก์กลาง)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1.5">Passcode / รหัสผ่าน</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-1.5">Passcode / รหัสผ่าน</label>
                     <input type="text" id="zoomPasscode" placeholder="123456 (เว้นว่างเพื่อใช้รหัสกลาง)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
                 </div>
                 <div class="flex justify-end space-x-2 pt-3">
-                    <button type="button" onclick="closeZoomModal()" class="px-4 py-2 text-xs font-medium text-slate-500 hover:bg-slate-50 rounded-xl transition">ยกเลิก</button>
-                    <button type="submit" id="zoomBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl text-xs font-medium transition shadow-md shadow-emerald-600/20 active:scale-95">ยืนยันการจอง</button>
+                    <button type="button" onclick="closeZoomModal()" class="px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50 rounded-xl transition">ยกเลิก</button>
+                    <button type="submit" id="zoomBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl text-sm font-medium transition shadow-md active:scale-95">ยืนยันการจอง</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Smart Alert Modal -->
-    <div id="smartAlertModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.2s ease;">
-        <div class="bg-white max-w-sm w-full p-6 rounded-2xl shadow-2xl modal-content transform scale-95 transition-transform duration-200 border border-slate-100 text-center">
+    <div id="smartAlertModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50 opacity-0" style="transition: opacity 0.25s ease;">
+        <div class="bg-white max-w-md w-full p-6 rounded-2xl shadow-2xl modal-content transform scale-95 transition-transform duration-200 border border-slate-100 text-center">
             <div id="alertIcon" class="w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-md">🔔</div>
             <h3 id="alertTitle" class="text-base font-bold text-slate-800 mb-2">แจ้งเตือนระบบ</h3>
-            <p id="alertMessage" class="text-xs text-slate-600 mb-6 leading-relaxed whitespace-pre-line"></p>
+            <p id="alertMessage" class="text-sm text-slate-600 mb-6 leading-relaxed whitespace-pre-line"></p>
             <div id="alertActions" class="flex justify-center space-x-2">
-                <button onclick="closeSmartAlert()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-medium transition shadow-md active:scale-95">รับทราบ</button>
+                <button onclick="closeSmartAlert()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl text-sm font-medium transition shadow-md active:scale-95">รับทราบ</button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript -->
+    <!-- JavaScript (อัปเดตฟังก์ชัน cleanTime ให้รองรับเวลาหลักเดียว 100%) -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwyNk3aAqcF26UvS0PpybNHZEjYjG4gadjXs5QwHH7eHmjE6L0mRm1vaYO86CSO6hCO/exec";
 
         let allPRLogs = [];
         let allZoomBookings = [];
+        let filteredPRLogs = [];
+        let filteredZoomBookings = [];
+        
+        let prCurrentPage = 1;
+        let zoomCurrentPage = 1;
+        const rowsPerPage = 5;
         let calendar;
 
         function generateTimeOptions() {
             const startSelect = document.getElementById("zoomStart");
             const endSelect = document.getElementById("zoomEnd");
-            
             let optionsHTML = '<option value="">-- เลือกเวลา --</option>';
-            
             for (let hour = 0; hour < 24; hour++) {
                 for (let minute = 0; minute < 60; minute += 30) {
                     const hStr = String(hour).padStart(2, '0');
@@ -284,7 +314,6 @@
                     optionsHTML += `<option value="${timeVal}">${timeVal} น.</option>`;
                 }
             }
-            
             startSelect.innerHTML = optionsHTML;
             endSelect.innerHTML = optionsHTML;
         }
@@ -313,7 +342,7 @@
             if (extraButtons) {
                 actionsEl.innerHTML = extraButtons;
             } else {
-                actionsEl.innerHTML = `<button onclick="closeSmartAlert()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-medium transition shadow-md active:scale-95">รับทราบ</button>`;
+                actionsEl.innerHTML = `<button onclick="closeSmartAlert()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl text-sm font-medium transition shadow-md active:scale-95">รับทราบ</button>`;
             }
 
             modal.classList.remove("hidden");
@@ -373,7 +402,6 @@
             document.getElementById("zoomDate").setAttribute("min", today);
             generateTimeOptions();
             initCalendar();
-            fetchData();
         };
 
         function initCalendar() {
@@ -381,7 +409,7 @@
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'th',
-                height: 480,
+                height: 520,
                 fixedWeekCount: false,
                 displayEventTime: false,
                 headerToolbar: {
@@ -389,14 +417,65 @@
                     center: 'title',
                     right: 'dayGridMonth'
                 },
-                events: [],
+                events: function(fetchInfo, successCallback, failureCallback) {
+                    if (!API_URL || API_URL.includes("ใส่วิเบบแอปURL")) {
+                        successCallback([]);
+                        return;
+                    }
+                    fetch(API_URL)
+                        .then(res => res.json())
+                        .then(data => {
+                            allPRLogs = data.prLogs || [];
+                            allZoomBookings = data.zoomBookings || [];
+                            
+                            filteredPRLogs = [...allPRLogs].reverse();
+                            filteredZoomBookings = [...allZoomBookings].reverse();
+
+                            prCurrentPage = 1;
+                            zoomCurrentPage = 1;
+
+                            renderPRTable();
+                            renderZoomTable();
+
+                            const events = allZoomBookings.filter(r => r[6] !== 'ยกเลิก').map(r => {
+                                const dateStr = cleanDate(r[2]); 
+                                const startTime = cleanTime(r[3]); // ฟังก์ชันใหม่ จัดการแปลง 6:00 เป็น 06:00 อัตโนมัติ
+                                const endTime = cleanTime(r[4]); 
+                                const rawTitle = r[7] || 'จอง Zoom'; 
+                                const deptName = r[10] || ''; 
+                                
+                                const displayTitle = deptName ? `[${deptName}] ${rawTitle}` : rawTitle;
+                                const shortTitle = displayTitle.length > 30 ? displayTitle.substring(0, 30) + '...' : displayTitle;
+
+                                return {
+                                    title: shortTitle,
+                                    start: `${dateStr}T${startTime}:00`,
+                                    end: `${dateStr}T${endTime}:00`,
+                                    color: '#059669',
+                                    extendedProps: {
+                                        fullTitle: rawTitle,
+                                        department: deptName || 'ไม่ระบุกลุ่มงาน',
+                                        requester: r[5] || '', 
+                                        timeStr: `${startTime} - ${endTime} น.`,
+                                        zoomLink: r[8] || 'https://zoom.us',
+                                        passcode: r[9] || ''
+                                    }
+                                };
+                            });
+                            successCallback(events);
+                        })
+                        .catch(err => {
+                            console.error("Error loading data:", err);
+                            failureCallback(err);
+                        });
+                },
                 eventClick: function(info) {
                     const props = info.event.extendedProps;
-                    const detailText = `หัวข้อ: ${props.fullTitle}\nผู้จอง: ${props.requester}\nเวลา: ${props.timeStr}\nรหัสผ่าน (Passcode): ${props.passcode || 'ใช้รหัสกลาง'}`;
+                    const detailText = `หัวข้อ: ${props.fullTitle}\nสังกัด: ${props.department}\nผู้จอง: ${props.requester}\nเวลา: ${props.timeStr}\nรหัสผ่าน (Passcode): ${props.passcode || 'ใช้รหัสกลาง'}`;
                     
                     const buttons = `
-                        <button onclick="window.open('${props.zoomLink}', '_blank')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-medium transition shadow-md active:scale-95">🔗 เปิดลิงก์ Zoom</button>
-                        <button onclick="closeSmartAlert()" class="px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-medium transition">ปิด</button>
+                        <button onclick="window.open('${props.zoomLink}', '_blank')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-m font-medium transition shadow-md active:scale-95">🔗 เปิดลิงก์ Zoom</button>
+                        <button onclick="closeSmartAlert()" class="px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-m font-medium transition">ปิด</button>
                     `;
                     showSmartAlert("รายละเอียดการจอง Zoom", detailText, "info", buttons);
                 }
@@ -406,70 +485,52 @@
 
         function cleanDate(rawDate) {
             if (!rawDate) return '';
-            if (rawDate.includes('T')) return rawDate.split('T')[0];
-            return rawDate;
+            let dateStr = String(rawDate).trim();
+            if (dateStr.includes('T')) dateStr = dateStr.split('T')[0];
+            if (dateStr.length >= 10) return dateStr.substring(0, 10);
+            return dateStr;
         }
 
+        // ฟังก์ชันแปลงเวลาแบบ Robust ป้องกันเวลาหลักเดียว (เช่น 6:00 -> 06:00) 100%
         function cleanTime(rawTime) {
-            if (!rawTime) return '';
-            if (rawTime.includes('T')) {
-                const dateObj = new Date(rawTime);
+            if (!rawTime) return '00:00';
+            let timeStr = String(rawTime).trim().replace('น.', '').trim();
+            if (timeStr.includes('T')) {
+                const dateObj = new Date(timeStr);
                 if (!isNaN(dateObj.getTime())) {
                     const hours = String(dateObj.getHours()).padStart(2, '0');
                     const mins = String(dateObj.getMinutes()).padStart(2, '0');
                     return `${hours}:${mins}`;
                 }
             }
-            return rawTime;
+            const parts = timeStr.split(':');
+            if (parts.length >= 2) {
+                const h = parts[0].padStart(2, '0');
+                const m = parts[1].substring(0, 2).padStart(2, '0');
+                return `${h}:${m}`;
+            }
+            return timeStr.length === 4 ? `0${timeStr}` : (timeStr.length === 5 ? timeStr : '00:00');
         }
 
-        function fetchData() {
-            if (!API_URL || API_URL.includes("ใส่_WEB_APP_URL")) return;
-            fetch(API_URL)
-                .then(res => res.json())
-                .then(data => {
-                    allPRLogs = data.prLogs || [];
-                    allZoomBookings = data.zoomBookings || [];
-                    renderPRTable(allPRLogs);
-                    renderZoomTable(allZoomBookings);
-                    renderCalendarEvents(allZoomBookings);
-                })
-                .catch(err => console.error("Error loading data:", err));
-        }
-
-        function renderCalendarEvents(bookings) {
-            const events = bookings.filter(r => r[6] !== 'ยกเลิก').map(r => {
-                const dateStr = cleanDate(r[2]);
-                const startTime = cleanTime(r[3]);
-                const endTime = cleanTime(r[4]);
-                const rawTitle = r[7] || 'จอง Zoom';
-                const shortTitle = rawTitle.length > 22 ? rawTitle.substring(0, 22) + '...' : rawTitle;
-
-                return {
-                    title: shortTitle,
-                    start: `${dateStr}T${startTime}:00`,
-                    end: `${dateStr}T${endTime}:00`,
-                    color: '#059669',
-                    extendedProps: {
-                        fullTitle: rawTitle,
-                        requester: r[5] || '',
-                        timeStr: `${startTime} - ${endTime} น.`,
-                        zoomLink: r[8] || 'https://zoom.us',
-                        passcode: r[9] || ''
-                    }
-                };
-            });
-            calendar.removeAllEvents();
-            calendar.addEventSource(events);
-        }
-
-        function renderPRTable(logs) {
+        function renderPRTable() {
             const tbody = document.getElementById("prTableBody");
-            if (!logs.length) {
+            const totalPages = Math.ceil(filteredPRLogs.length / rowsPerPage) || 1;
+            if (prCurrentPage > totalPages) prCurrentPage = totalPages;
+            if (prCurrentPage < 1) prCurrentPage = 1;
+
+            const startIdx = (prCurrentPage - 1) * rowsPerPage;
+            const paginatedData = filteredPRLogs.slice(startIdx, startIdx + rowsPerPage);
+
+            document.getElementById("prPageInfo").innerText = `แสดงหน้า ${prCurrentPage} จาก ${totalPages} (รวม ${filteredPRLogs.length} รายการ)`;
+            document.getElementById("prPrevBtn").disabled = (prCurrentPage === 1);
+            document.getElementById("prNextBtn").disabled = (prCurrentPage === totalPages || totalPages === 0);
+
+            if (!paginatedData.length) {
                 tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-400">ยังไม่มีข้อมูล</td></tr>`;
                 return;
             }
-            tbody.innerHTML = logs.slice().reverse().map(r => `
+
+            tbody.innerHTML = paginatedData.map(r => `
                 <tr class="hover:bg-slate-50/80 transition">
                     <td class="p-3 font-semibold text-blue-600 break-words">${r[1] || ''}</td>
                     <td class="p-3 text-slate-700 break-words whitespace-normal">${r[2] || ''}</td>
@@ -478,45 +539,75 @@
             `).join('');
         }
 
-        function renderZoomTable(bookings) {
+        function changePRPage(direction) {
+            prCurrentPage += direction;
+            renderPRTable();
+        }
+
+        function renderZoomTable() {
             const tbody = document.getElementById("zoomTableBody");
-            if (!bookings.length) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-slate-400">ยังไม่มีข้อมูล</td></tr>`;
+            const totalPages = Math.ceil(filteredZoomBookings.length / rowsPerPage) || 1;
+            if (zoomCurrentPage > totalPages) zoomCurrentPage = totalPages;
+            if (zoomCurrentPage < 1) zoomCurrentPage = 1;
+
+            const startIdx = (zoomCurrentPage - 1) * rowsPerPage;
+            const paginatedData = filteredZoomBookings.slice(startIdx, startIdx + rowsPerPage);
+
+            document.getElementById("zoomPageInfo").innerText = `แสดงหน้า ${zoomCurrentPage} จาก ${totalPages} (รวม ${filteredZoomBookings.length} รายการ)`;
+            document.getElementById("zoomPrevBtn").disabled = (zoomCurrentPage === 1);
+            document.getElementById("zoomNextBtn").disabled = (zoomCurrentPage === totalPages || totalPages === 0);
+
+            if (!paginatedData.length) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">ยังไม่มีข้อมูล</td></tr>`;
                 return;
             }
-            tbody.innerHTML = bookings.slice().reverse().map(r => {
+
+            tbody.innerHTML = paginatedData.map(r => {
                 const dateStr = cleanDate(r[2]);
                 const startTime = cleanTime(r[3]);
                 const endTime = cleanTime(r[4]);
+                const topic = r[7] || '';
+                const requester = r[5] || '';
+                const department = r[10] || '-';
+
                 return `
                 <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-medium text-emerald-600 break-words">
-                        📅 ${dateStr}<br><span class="text-slate-400">⏰ ${startTime} - ${endTime} น.</span>
+                    <td class="p-3 font-medium text-emerald-600 whitespace-nowrap">
+                        📅 ${dateStr}<br><span class="text-slate-400 font-normal">⏰ ${startTime} - ${endTime} น.</span>
                     </td>
-                    <td class="p-3 font-semibold text-slate-700 break-words whitespace-normal">${r[7] || ''}</td>
-                    <td class="p-3 text-slate-500 break-words">${r[5] || ''}</td>
+                    <td class="p-3 font-semibold text-slate-700 break-words whitespace-normal">${topic}</td>
+                    <td class="p-3 text-blue-600 font-medium break-words">${department}</td>
+                    <td class="p-3 text-slate-500 break-words">${requester}</td>
                 </tr>
             `}).join('');
         }
 
+        function changeZoomPage(direction) {
+            zoomCurrentPage += direction;
+            renderZoomTable();
+        }
+
         function filterPRTable() {
             const keyword = document.getElementById("searchPR").value.toLowerCase();
-            const filtered = allPRLogs.filter(r => 
+            filteredPRLogs = allPRLogs.slice().reverse().filter(r => 
                 (r[1] && String(r[1]).toLowerCase().includes(keyword)) || 
                 (r[2] && String(r[2]).toLowerCase().includes(keyword)) || 
                 (r[4] && String(r[4]).toLowerCase().includes(keyword))
             );
-            renderPRTable(filtered);
+            prCurrentPage = 1;
+            renderPRTable();
         }
 
         function filterZoomTable() {
             const keyword = document.getElementById("searchZoom").value.toLowerCase();
-            const filtered = allZoomBookings.filter(r => 
+            filteredZoomBookings = allZoomBookings.slice().reverse().filter(r => 
                 (r[2] && String(r[2]).toLowerCase().includes(keyword)) || 
                 (r[5] && String(r[5]).toLowerCase().includes(keyword)) ||
-                (r[7] && String(r[7]).toLowerCase().includes(keyword))
+                (r[7] && String(r[7]).toLowerCase().includes(keyword)) ||
+                (r[10] && String(r[10]).toLowerCase().includes(keyword))
             );
-            renderZoomTable(filtered);
+            zoomCurrentPage = 1;
+            renderZoomTable();
         }
 
         function submitPR(e) {
@@ -537,7 +628,7 @@
                     document.getElementById("prSubject").value = "";
                     document.getElementById("prRequester").value = "";
                     showSmartAlert("สำเร็จ!", `ออกเลข PR เรียบร้อยแล้ว\nเลขที่: ${res.prNumber}`, "success");
-                    fetchData();
+                    calendar.refetchEvents();
                 } else { 
                     showSmartAlert("เกิดข้อผิดพลาด", res.message, "error"); 
                 }
@@ -565,6 +656,7 @@
             const payload = {
                 action: "bookZoom",
                 topic: document.getElementById("zoomTopic").value,
+                department: document.getElementById("zoomDepartment").value,
                 date: dateVal,
                 startTime: startVal,
                 endTime: document.getElementById("zoomEnd").value,
@@ -579,6 +671,7 @@
                 if (res.status === "success") {
                     closeZoomModal();
                     document.getElementById("zoomTopic").value = "";
+                    document.getElementById("zoomDepartment").value = "";
                     document.getElementById("zoomDate").value = "";
                     document.getElementById("zoomStart").value = "";
                     document.getElementById("zoomEnd").value = "";
@@ -588,7 +681,7 @@
                     
                     const successMsg = `จองห้อง Zoom สำเร็จ!\n🔗 ลิงก์: ${res.zoomLink}\n🔑 Passcode: ${res.zoomPasscode || 'ใช้รหัสกลาง'}`;
                     showSmartAlert("จองสำเร็จ", successMsg, "success");
-                    fetchData();
+                    calendar.refetchEvents();
                 } else if (res.status === "conflict") {
                     showSmartAlert("ไม่สามารถจองได้", res.message, "conflict");
                 }
